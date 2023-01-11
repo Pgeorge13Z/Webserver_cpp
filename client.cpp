@@ -4,6 +4,9 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include <string>
+
+using namespace std;
 
 int main()
 {
@@ -23,13 +26,16 @@ int main()
         std::cerr << "client connect fail" << std::endl;
 
     char recvbuf[1024];
+    int i = 0;
     while (1)
     {
 
         // 3. 发送数据
-        const char *data = "hello , im client";
-        write(cfd, data, strlen(data));
-        sleep(1);
+        // string data = "hello , im client";
+        // write(cfd, data.c_str(), data.size());
+        sprintf(recvbuf, " %d\n", i++);
+        write(cfd, recvbuf, strlen(recvbuf)+1);
+        
         // 4. 接收数据
 
         int len = read(cfd, recvbuf, sizeof(recvbuf));
@@ -39,13 +45,16 @@ int main()
             exit(-1);
         }
         else if (len > 0)
-            printf("receive server data: %s\n", recvbuf);
+            //printf("%s\n",recvbuf);
+            std::cout <<"receive server data:"<< recvbuf << std::endl;
         else if (len == 0)
         {
             // 表示服务器端断开连接
             printf("server closed");
             break;
         }
+
+        sleep(1);
     }
 
     // 5. 关闭连接
